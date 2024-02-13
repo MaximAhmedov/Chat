@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
 #include "User.h"
+#include "Sha1.h"
 #include <vector>
 
+#define LOGINLENGTH 10
 
 class Chat {
 
@@ -11,8 +13,10 @@ public:
 	~Chat();
 	
 
-	User* regis(std::string& name, std::string& login, std::string& pasw);
-	User* auth(std::string& login, std::string& pasw);
+	User* regis(std::string& name, std::string& login, char pasw[], int paswLength);
+	User* auth(std::string& login, char pasw[], int paswLength);
+	bool regData(std::string& name, std::string& login, char pasw[], int paswLength);
+	bool authData(std::string& login, char pasw[]);
 
 	void showUsers(User* user)const;
 	void showChats(User* user);

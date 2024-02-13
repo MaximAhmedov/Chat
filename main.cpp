@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "Chat.h"
 #include <windows.h>
 
@@ -11,13 +12,14 @@ int main() {
 	Chat chat;
 	User* me = nullptr;
 	User* other = nullptr;
-	std::string name;
-	std::string login;
-	std::string pasw;
 	bool chatCon = true;
 
 	while (chatCon) {
 		system("cls");
+		std::string name;
+		std::string login;
+		char pass[LOGINLENGTH];
+		std::fill(pass, pass+LOGINLENGTH, '1');
 		int choice;
 		std::cout << "\t1 - Войти\n \t2 - Зарегестрироваться\n \t3 - Выйти из программы\n";
 		std::cin >> choice;
@@ -33,32 +35,19 @@ int main() {
 			{
 				bool authCon = true;
 				while (authCon) {
-					std::cout << "Введите логин\n";
-					std::cin >> login;
-					std::cout << "Введите пароль\n";
-					std::cin >> pasw;
-					me = chat.auth(login, pasw);
+					if (!chat.authData(login, pass))
+						break;
+					me = chat.auth(login,pass,LOGINLENGTH);
 					if (me) { authCon = false; }
 				}
 				break; }
 			case 2:
 			{
 				bool regCon = true;
-				std::string pasw2;
 				while (regCon) {
-					std::cout << "Введите имя\n";
-					std::cin >> name;
-					std::cout << "Введите логин\n";
-					std::cin >> login;
-					std::cout << "Введите пароль\n";
-					std::cin >> pasw;
-					std::cout << "Повторите пароль\n";
-					std::cin >> pasw2;
-					if (pasw == pasw2) {
-						me = chat.regis(name, login, pasw);
-					}
-					else
-						std::cout << "пароли не совпадают!\n";
+					if (!chat.regData(name, login, pass, LOGINLENGTH))
+						break;
+					me = chat.regis(name,login,pass,LOGINLENGTH);
 					if (me) { regCon = false; }
 				}
 				break; 
@@ -69,11 +58,10 @@ int main() {
 		}
 
 		if (me) {
-
 			bool inChatCon = true;
 			while (inChatCon) {
 				int inChat;
-				std::cout << "\t1 - все пользователи\n \t2 - мои друзья\n \t3 - мои сообщения\n \t4 - выйти из аккаунта\n";
+				std::cout << "\t1 - все пользователи\n \t2 - мои сообщения\n \t3 - выйти из аккаунта\n";
 				std::cin >> inChat;
 
 				switch (inChat) {
@@ -86,7 +74,7 @@ int main() {
 						std::cin >> friendChoice;
 						other = chat.userChoice(friendChoice, me);
 						if (other) {
-							me->showOneChat(other);
+							
 							chat.chatting(me, other);
 						}
 					}
@@ -95,26 +83,20 @@ int main() {
 				}
 				case 2:
 				{
-					system("cls");
-					std::cout << "Эта функция пока недоступна :-(\n";
-					break;
-				}
-				case 3:
-				{
 					chat.showChats(me);
 					if (!me->isEmptyMes()) {
 						int friendChoice;
 						std::cin >> friendChoice;
 						other = chat.chatChoice(friendChoice, me);
 						if (other) {
-							me->showOneChat(other);
+							
 							chat.chatting(me, other);
 						}
 						other = nullptr;
 					}
 					break;
 				}
-				case 4:
+				case 3:
 				{
 					inChatCon = false;
 					break;
@@ -124,10 +106,11 @@ int main() {
 					break;
 				}
 			}
-			User* me = nullptr;
-			User* other = nullptr;
 		}
-		
+		if (me)
+			me = nullptr;
+		if (other)
+			other = nullptr;
 	}
 	return 0;
 }

@@ -19,57 +19,102 @@ HashTable::~HashTable() {
 	delete[] mess_tops;
 }
 
-int HashTable::hash_func(const std::string& name) {
+int HashTable::hash_func(const std::string& login) {
 	int sum = 0;
-	char* login = new char[name.length() + 1];
-	strcpy(login, name.c_str());
+	char* name = new char[login.length() + 1];
+	strcpy(name, login.c_str());
 
-	for (int i = 0; i < strlen(login); i++) {
+	for (int i = 0; i < strlen(name); i++) {
 		sum += login[i];
 	}
 	return std::abs(sum) % mem_size;
 }
 
-void HashTable::send(std::string& text, const std::string& name) {
-	int index = hash_func(name);
-	if (mess_tops[index] != nullptr) {
+void HashTable::send(std::string& text, const std::string& name, const std::string& login) {
+	int index = hash_func(login);
+	if (mess_tops[index] != nullptr && mess_tops[index]->_login == login) {
 		Message* lastOne = mess_tops[index];
 		while (lastOne->next != nullptr) {
 			lastOne = lastOne->next;
 		}
-		Message* newMessage = new Message(text, name);
+		Message* newMessage = new Message(text, name, login);
 		lastOne->next = newMessage;
 	}
-	else {
-		mess_tops[index] = new Message(text, name);
+
+	else if (mess_tops[index] != nullptr && mess_tops[index]->_login != login) {
+		for (int i = 0; i < mem_size; i++) {
+			index++;
+			if (index == mem_size)
+				index = 0;
+			if (mess_tops[index] != nullptr) {
+				if (mess_tops[index]->_login == login)
+					break;
+			}
+			else if (mess_tops[index] == nullptr)
+				break;
+		}
+		mess_tops[index] = new Message(text, name, login);
 	}
+	else
+		mess_tops[index] = new Message(text, name, login);
 	count++;
+	if (count >= mem_size)
+		resize();
 }
 
-void HashTable::getBy(std::string& text, const std::string& name){
-	int index = hash_func(name);
-	if (mess_tops[index] != nullptr) {
+void HashTable::getBy(std::string& text, const std::string& name, const std::string& login){
+	int index = hash_func(login);
+	if (mess_tops[index] != nullptr && mess_tops[index]->_login == login) {
 		Message* lastOne = mess_tops[index];
 		while (lastOne->next != nullptr) {
 			lastOne = lastOne->next;
 		}
-		Message* newMessage = new Message(text, name);
+		Message* newMessage = new Message(text, name, login);
 		lastOne->next = newMessage;
 		newMessage->sended = false;
 	}
-	else {
-		mess_tops[index] = new Message(text, name);
+	else if (mess_tops[index] != nullptr && mess_tops[index]->_login != login) {
+		for (int i = 0; i < mem_size; i++) {
+			index++;
+			if (index == mem_size)
+				index = 0;
+			if (mess_tops[index] != nullptr) {
+				if (mess_tops[index]->_login == login)
+					break;
+			}
+			else if (mess_tops[index] == nullptr)
+				break;
+		}
+		mess_tops[index] = new Message(text, name, login);
 		mess_tops[index]->sended = false;
 	}
-	
+	else {
+		mess_tops[index] = new Message(text, name, login);
+		mess_tops[index]->sended = false;
+	}
 	count++;
+	if (count >= mem_size)
+		resize();
 }
 
-void HashTable::showMessages(const std::string& name)
+void HashTable::showMessages(const std::string& name, const std::string& login)
 {
-	int index = hash_func(name);
+	int index = hash_func(login);
+	if (mess_tops[index] != nullptr && mess_tops[index]->_login != login) {
+		for (int i = 0; i < mem_size; i++) {
+			index++;
+			if (index == mem_size)
+				index = 0;
+			if (mess_tops[index] != nullptr) {
+				if (mess_tops[index]->_login == login)
+					break;
+			}
+			else if (mess_tops[index] == nullptr)
+				break;
+		}
+	}
 	Message* start = mess_tops[index];
-	if (start == nullptr)
+	if (start == nullptr || start->_login!=login)
 		std::cout << "Напишите первое сообщение!\n";
 	else {
 		do {
@@ -92,19 +137,19 @@ void HashTable::showMessWithAll() const
 					last = last->next;
 				}
 				counter++;
-				std::cout << counter << " " << last->_name << "\n\t" << last->_text << '\n';
+				std::cout << counter << " " << last->_name << '|' << last->_login << "\n\t" << last->_text << '\n';
 			}
 		}
 }
 
-std::string& HashTable::getNameHT(int number) const
+std::string& HashTable::getLogHT(int number) const
 {
 	int counter = 0;
 	for (int i = 0; i < mem_size; i++) {
 		if (mess_tops[i] != nullptr) {
 			counter++;
 			if (counter == number) {
-				return mess_tops[i]->_name;
+				return mess_tops[i]->_login;
 			}
 		}
 	}
@@ -118,4 +163,17 @@ bool HashTable::isEmpty()
 		}
 	}
 	return true;
+}
+
+void HashTable::resize()
+{
+	Message** save = mess_tops;
+	int save_ms = mem_size;
+	mem_size *= 2;
+	mess_tops = new Message * [mem_size];
+	count = 0;
+	for (int i = 0; i < save_ms; i++) {
+		mess_tops[i] = save[i];
+	}
+	delete[] save;
 }

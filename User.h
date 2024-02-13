@@ -2,20 +2,22 @@
 #include <iostream>
 #include <string>
 #include "MessageHT.h"
+#include "Sha1.h"
+
+
 
 class User {
 public:
-	User(std::string& login, std::string& pasw);
-	User(std::string& name, std::string& login, std::string& pasw);
+	User(std::string& login, uint* pass);
+	User(std::string& name, std::string& login, uint* pass);
 	~User();
 	void setName(std::string& name);
-	void setNewPas(std::string& oldPasw, std::string& newPasw);
 
 	std::string getName()const;
 	std::string getLog()const;
-	std::string getPasw()const;
+	bool checkPass(uint* pass) const;
 
-	std::string getFriendNameInChat(int number);
+	std::string getFriendLogInChat(int number);
 
 	void sendMes(std::string& text, User* sender, User* receiver);
 	void showOneChat(User* mate)const;
@@ -27,6 +29,6 @@ private:
 	HashTable* _myMes;
 	std::string _name;
 	std::string _login;
-	std::string _pasw;
+	uint* _pass;
 
 };
