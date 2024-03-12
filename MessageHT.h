@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-
+#include <cstring>
 class HashTable {
 public:
 
