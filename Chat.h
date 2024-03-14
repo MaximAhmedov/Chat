@@ -6,6 +6,14 @@
 
 #define LOGINLENGTH 10
 
+#if defined(_WIN32)
+#define clear_screen() system("cls")
+#elif defined(_WIN64)
+#define clear_screen() system("cls")
+#elif defined(__linux__)
+#define clear_screen() clear
+#endif
+
 class Chat {
 
 public:

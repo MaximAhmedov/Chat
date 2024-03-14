@@ -1,27 +1,30 @@
 #include <iostream>
 #include <algorithm>
 #include "Chat.h"
-#include <windows.h>
 
+#if defined(_WIN32)
+#define clear_screen() system("cls")
+#elif defined(_WIN64)
+#define clear_screen() system("cls")
+#elif defined(__linux__)
+#define clear_screen() clear
+#endif
 
 int main() {
 	
-	SetConsoleOutputCP(1251);
-	SetConsoleCP(1251);
-
 	Chat chat;
 	User* me = nullptr;
 	User* other = nullptr;
 	bool chatCon = true;
 
 	while (chatCon) {
-		system("cls");
+		clear_screen();
 		std::string name;
 		std::string login;
 		char pass[LOGINLENGTH];
 		std::fill(pass, pass+LOGINLENGTH, '1');
 		int choice;
-		std::cout << "\t1 - �����\n \t2 - ������������������\n \t3 - ����� �� ���������\n";
+		std::cout << "\t1 - Войти\n \t2 - Регистрация\n \t3 - Выход\n";
 		std::cin >> choice;
 
 		if (choice == 3) {
@@ -53,7 +56,7 @@ int main() {
 				break; 
 			}
 			default:
-				std::cout << "�������� ����!\n";
+				std::cout << "Ошибка!\n";
 				break;
 		}
 
@@ -61,7 +64,7 @@ int main() {
 			bool inChatCon = true;
 			while (inChatCon) {
 				int inChat;
-				std::cout << "\t1 - ��� ������������\n \t2 - ��� ���������\n \t3 - ����� �� ��������\n";
+				std::cout << "\t1 - Все пользователи\n \t2 - Мои Сообщения\n \t3 - Выход из аккаунта\n";
 				std::cin >> inChat;
 
 				switch (inChat) {
@@ -69,7 +72,7 @@ int main() {
 				{
 					chat.showUsers(me);
 					if (chat.chatSize() > 1) {
-						std::cout << "�������� ������������, ��� �������� ��� ��������� ��� 0 ����� �������� �� ���������� �����\n";
+						std::cout << "Выберите пользователя или введите 0 для возврата\n";
 						int friendChoice;
 						std::cin >> friendChoice;
 						other = chat.userChoice(friendChoice, me);
@@ -102,7 +105,7 @@ int main() {
 					break;
 				}
 				default:
-					std::cout << "�������� ����!\n";
+					std::cout << "Ошибка!\n";
 					break;
 				}
 			}

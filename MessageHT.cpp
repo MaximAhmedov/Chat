@@ -115,7 +115,7 @@ void HashTable::showMessages(const std::string& name, const std::string& login)
 	}
 	Message* start = mess_tops[index];
 	if (start == nullptr || start->_login!=login)
-		std::cout << "�������� ������ ���������!\n";
+		std::cout << "Напишите первое сообщение!\n";
 	else {
 		do {
 			if (start->sended == true) {
@@ -144,7 +144,6 @@ void HashTable::showMessWithAll() const
 
 std::string& HashTable::getLogHT(int number) const
 {
-	std::string zeroLogin = "None";
 	int counter = 0;
 	for (int i = 0; i < mem_size; i++) {
 		if (mess_tops[i] != nullptr) {
@@ -152,11 +151,8 @@ std::string& HashTable::getLogHT(int number) const
 			if (counter == number) {
 				return mess_tops[i]->_login;
 			}
-			else 
-				return zeroLogin;
 		}
 	}
-	return zeroLogin;
 }
 
 bool HashTable::isEmpty()

@@ -13,26 +13,26 @@ Chat::~Chat()
 
 User* Chat::regis(std::string& name, std::string& login, char pasw[], int paswLength)
 {
-	system("cls");
+	clear_screen();
 
 	uint* sh1 = sha1(pasw, LOGINLENGTH);
 	User* newUser = nullptr;
 	if (_User.empty()) {
 		newUser = new User(name, login, sh1);
 		_User.push_back(newUser);
-		std::cout << "�������� �����������!\n";
+		std::cout << "Успешная регистрация!\n";
 		return newUser;
 	}
 	else {
 		for (int i = 0; i < _User.size(); i++) {
 			if (_User[i]->getLog() == login) {
-				std::cout << "������ ����� ��� �����, ���������� ������!\n";
+				std::cout << "Логин занят, попробуйте другой!\n";
 				return nullptr;
 			}
 			else {
 				newUser = new User(name, login, sh1);
 				_User.push_back(newUser);
-				std::cout << "�������� �����������!\n";
+				std::cout << "Успешная регистрация!\n";
 				return newUser;
 			}
 		}
@@ -42,43 +42,43 @@ User* Chat::regis(std::string& name, std::string& login, char pasw[], int paswLe
 
 User* Chat::auth(std::string& login, char pasw[], int paswLength)
 {
-	system("cls");
+	clear_screen();
 	uint* sh1 = sha1(pasw, LOGINLENGTH);
 	for (int i = 0; i < _User.size(); i++) {
 		if (_User[i]->getLog() == login) {
 			if (_User[i]->checkPass(sh1)) {
-				std::cout << "�������� �����������!\n";
+				std::cout << "успешная авторизация!\n";
 				return _User[i];
 			}
 			else {
-				std::cout << "�������� ������!\n";
+				std::cout << "неверный пароль!\n";
 				return nullptr;
 			}
 		}
 	}
-	std::cout << "������ ������������ �� ����������!\n";
+	std::cout << "Пользователя с данным логином не существует!\n";
 	return nullptr;
 }
 
 bool Chat::regData(std::string& name, std::string& login, char pasw[], int paswLength)
 {
-	system("cls");
+	clear_screen();
 	char pasw2[LOGINLENGTH]{ 1 };
-	std::cout << "������� 0 ��� ������ �� ���������� ����� ������\n";
-	std::cout << "������� ���\n";
+	std::cout << "Введите 0 для возврата на предыдущий экран или следуйте командам:\n";
+	std::cout << "Ведите имя\n";
 	std::cin >> name;
 	if (name[0] == '0' && name.size() == 1)
 		return false;
-	std::cout << "������� �����\n";
+	std::cout << "Введите логин\n";
 	std::cin >> login;
 	if (login[0] == '0' && login.size() == 1)
 		return false;
-	std::cout << "������� ������\n";
+	std::cout << "Введите пароль\n";
 	std::cin >> pasw;
 	if (pasw[0] == '0')
 		if (!pasw[1])
 			return false;
-	std::cout << "��������� ������\n";
+	std::cout << "Повторите пароль\n";
 	std::cin >> pasw2;
 	if (pasw2[0] == '0')
 		if (!pasw2[1])
@@ -91,13 +91,13 @@ bool Chat::regData(std::string& name, std::string& login, char pasw[], int paswL
 
 bool Chat::authData(std::string& login, char pasw[])
 {
-	system("cls");
-	std::cout << "������� 0 ��� ������ �� ���������� ����� ������\n";
-	std::cout << "������� �����\n";
+	clear_screen();
+	std::cout << "Введите 0 для возврата на предыдущий экран или следуйте командам:\n";
+	std::cout << "Введите логин\n";
 	std::cin >> login;
 	if (login[0] == '0' && login.size() == 1)
 		return false;
-	std::cout << "������� ������\n";
+	std::cout << "Введите пароль\n";
 	std::cin >> pasw;
 	std::cout << pasw[1];
 	if (pasw[0] == '0')
@@ -108,7 +108,7 @@ bool Chat::authData(std::string& login, char pasw[])
 
 void Chat::showUsers(User* user) const
 {
-	system("cls");
+	clear_screen();
 	int counter = 0;
 	if (_User.size() > 1) {
 		for (int i = 0; i < _User.size(); i++) {
@@ -119,18 +119,18 @@ void Chat::showUsers(User* user) const
 		}
 	}
 	else
-		std::cout << "�� ������������ ������������ :-(\n";
+		std::cout << "Вы единственный пользователь :-(\n";
 }
 
 void Chat::showChats(User* user)
 {
-	system("cls");
+	clear_screen();
 	if (!user->isEmptyMes()) {
-		std::cout << "�������� ������ ��� 0 ����� �������� �� ���������� �����\n";
+		std::cout << "Введите номер диалога или 0 для возврата\n";
 		user->showAllChats();
 	}
 	else
-		std::cout << "���� ��� ������� �������� :-(\n";
+		std::cout << "Пока нет диалогов :-(\n";
 }
 
 User* Chat::chatChoice(int number, User* me)
@@ -162,7 +162,7 @@ User* Chat::userChoice(int number, User* me)
 			}
 		}
 	}
-	std::cout << "������ �������� �����!\n";
+	std::cout << "Ошибка!\n";
 	return nullptr;
 }
 
@@ -171,13 +171,13 @@ void Chat::chatting(User* me, User* other)
 	std::string text;
 	bool chattingStatus = true;
 	while (chattingStatus) {
-		system("cls");
+		clear_screen();
 		me->showOneChat(other);
-		std::cout << "\n������� ��������� � ������� Enter ��� ��������, ��� ������ �� ������ ��������� 0\n";
+		std::cout << "\nВведите сообщение и нажмите Enter для отправки, для возврата отправьте 0\n";
 		std::getline(std::cin, text, '\n');
 		if (text[0] == '0' && text.size() == 1) {
 			chattingStatus = false;
-			system("cls");
+			clear_screen();
 			break;
 		}
 		else if (text.size() > 1) {

@@ -38,7 +38,5 @@ private:
     Message** mess_tops;
     int mem_size;
     int count;
-
-
 };
 
