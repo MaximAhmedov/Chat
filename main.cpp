@@ -7,7 +7,7 @@
 #elif defined(_WIN64)
 #define clear_screen() system("cls")
 #elif defined(__linux__)
-#define clear_screen() clear
+#define clear_screen() system("clear")
 #endif
 
 int main() {

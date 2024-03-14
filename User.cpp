@@ -50,7 +50,7 @@ void User::sendMes(std::string& text, User* sender, User* receiver)
 
 void User::showOneChat(User* mate) const
 {
-	system("cls");
+	clear_screen();
 	_myMes->showMessages(mate->getName(), mate->getLog());
 }
 
