@@ -9,9 +9,9 @@ public:
 
     void send(std::string& text, const std::string& name, const std::string& login);
     void getBy(std::string& text, const std::string& name, const std::string& login);
-    void showMessages(const std::string& name, const std::string& login);
-    void showMessWithAll()const;
-    std::string& getLogHT(int number) const;
+    std::string showMessages(const std::string& name, const std::string& login);
+    std::string showMessWithAll()const;
+    std::string getLogHT(int number) const;
     bool isEmpty();
     void resize();
 

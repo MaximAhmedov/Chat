@@ -48,15 +48,15 @@ void User::sendMes(std::string& text, User* sender, User* receiver)
 	receiver->_myMes->getBy(text, sender->getName(), sender->getLog());
 }
 
-void User::showOneChat(User* mate) const
+std::string User::showOneChat(User* mate) const
 {
 	clear_screen();
-	_myMes->showMessages(mate->getName(), mate->getLog());
+	return _myMes->showMessages(mate->getName(), mate->getLog());
 }
 
-void User::showAllChats() const
+std::string User::showAllChats() const
 {
-	_myMes->showMessWithAll();
+	return _myMes->showMessWithAll();
 }
 
 bool User::isEmptyMes()

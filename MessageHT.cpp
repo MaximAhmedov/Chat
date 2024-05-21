@@ -57,9 +57,9 @@ void HashTable::send(std::string& text, const std::string& name, const std::stri
 	}
 	else
 		mess_tops[index] = new Message(text, name, login);
-	count++;
-	if (count >= mem_size)
-		resize();
+	// count++;
+	// if (count >= mem_size)
+	// 	resize();
 }
 
 void HashTable::getBy(std::string& text, const std::string& name, const std::string& login){
@@ -92,13 +92,14 @@ void HashTable::getBy(std::string& text, const std::string& name, const std::str
 		mess_tops[index] = new Message(text, name, login);
 		mess_tops[index]->sended = false;
 	}
-	count++;
-	if (count >= mem_size)
-		resize();
+	// count++;
+	// if (count >= mem_size)
+	// 	resize();
 }
 
-void HashTable::showMessages(const std::string& name, const std::string& login)
+std::string HashTable::showMessages(const std::string& name, const std::string& login)
 {
+	std::string temp;
 	int index = hash_func(login);
 	if (mess_tops[index] != nullptr && mess_tops[index]->_login != login) {
 		for (int i = 0; i < mem_size; i++) {
@@ -114,21 +115,26 @@ void HashTable::showMessages(const std::string& name, const std::string& login)
 		}
 	}
 	Message* start = mess_tops[index];
-	if (start == nullptr || start->_login!=login)
-		std::cout << "Напишите первое сообщение!\n";
+	if (start == nullptr || start->_login!=login){
+		temp = "Напишите первое сообщение!\n";
+		return temp;
+		}
 	else {
 		do {
 			if (start->sended == true) {
-				std::cout << std::string(3,'\t');
+				temp += std::string(3,'\t');
 			}
-			std::cout << start->_text << '\n';
+			temp += start->_text + '\n';
 			start = start->next;
 		} while (start != nullptr);
+		return temp;
 	}
 }
 
-void HashTable::showMessWithAll() const
+std::string HashTable::showMessWithAll() const
 {
+	std::string temp;
+	temp.clear();
 	int counter = 0;
 		for (int i = 0; i < mem_size; i++) {
 			if (mess_tops[i] != nullptr) {
@@ -137,12 +143,13 @@ void HashTable::showMessWithAll() const
 					last = last->next;
 				}
 				counter++;
-				std::cout << counter << " " << last->_name << '|' << last->_login << "\n\t" << last->_text << '\n';
+				temp += std::to_string(counter) + " " + last->_name + '|' + last->_login + "\n\t" + last->_text + '\n';
 			}
 		}
+		return temp;
 }
 
-std::string& HashTable::getLogHT(int number) const
+std::string HashTable::getLogHT(int number) const
 {
 	int counter = 0;
 	for (int i = 0; i < mem_size; i++) {
@@ -153,6 +160,7 @@ std::string& HashTable::getLogHT(int number) const
 			}
 		}
 	}
+	return "Error";
 }
 
 bool HashTable::isEmpty()

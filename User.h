@@ -26,8 +26,8 @@ public:
 	std::string getFriendLogInChat(int number);
 
 	void sendMes(std::string& text, User* sender, User* receiver);
-	void showOneChat(User* mate)const;
-	void showAllChats()const;
+	std::string showOneChat(User* mate)const;
+	std::string showAllChats()const;
 
 	bool isEmptyMes();
 

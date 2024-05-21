@@ -1,6 +1,7 @@
 #include "Chat.h"
 Chat::Chat()
 {
+	
 }
 
 Chat::~Chat()
@@ -8,6 +9,19 @@ Chat::~Chat()
 	for (int i = 0; i < _User.size(); i++) {
 		delete _User[i];
 	}
+}
+
+
+void Chat::acceptClient(){
+	_Server->accepting();
+}
+
+void Chat::responseToClient(std::string &response){
+	_Server->sendTo(response);
+}
+
+std::string Chat::commandFromClient(){
+	return _Server->recFrom();
 }
 
 
@@ -63,23 +77,38 @@ User* Chat::auth(std::string& login, char pasw[], int paswLength)
 bool Chat::regData(std::string& name, std::string& login, char pasw[], int paswLength)
 {
 	clear_screen();
+	std::string temp;
 	char pasw2[LOGINLENGTH]{ 1 };
-	std::cout << "Введите 0 для возврата на предыдущий экран или следуйте командам:\n";
-	std::cout << "Ведите имя\n";
-	std::cin >> name;
+	temp = "Введите 0 для возврата на предыдущий экран или следуйте командам:\nВедите имя\n";
+	_Server->sendTo(temp);
+	temp.clear();
+	name = _Server->recFrom();
 	if (name[0] == '0' && name.size() == 1)
 		return false;
-	std::cout << "Введите логин\n";
-	std::cin >> login;
+	temp = "Введите логин\n";
+	_Server->sendTo(temp);
+	temp.clear();
+	login = _Server->recFrom();
 	if (login[0] == '0' && login.size() == 1)
 		return false;
-	std::cout << "Введите пароль\n";
-	std::cin >> pasw;
+	temp = "Введите пароль\n";
+	_Server->sendTo(temp);
+	temp.clear();
+	std::string tempPass = _Server->recFrom();
+	for(int i = 0; i < tempPass.size(); i++){
+		pasw[i] = tempPass[i];
+	}
 	if (pasw[0] == '0')
 		if (!pasw[1])
 			return false;
-	std::cout << "Повторите пароль\n";
-	std::cin >> pasw2;
+	temp = "Повторите пароль\n";
+	_Server->sendTo(temp);
+	temp.clear();
+	tempPass.clear();
+	tempPass = _Server->recFrom();
+	for(int i = 0; i < tempPass.size(); i++){
+		pasw2[i] = tempPass[i];
+	}
 	if (pasw2[0] == '0')
 		if (!pasw2[1])
 			return false;
@@ -92,13 +121,20 @@ bool Chat::regData(std::string& name, std::string& login, char pasw[], int paswL
 bool Chat::authData(std::string& login, char pasw[])
 {
 	clear_screen();
-	std::cout << "Введите 0 для возврата на предыдущий экран или следуйте командам:\n";
-	std::cout << "Введите логин\n";
-	std::cin >> login;
+	std::string temp;
+	temp = "Введите 0 для возврата на предыдущий экран или следуйте командам:\nВведите логин\n";
+	_Server->sendTo(temp);
+	temp.clear();
+	login = _Server->recFrom();
 	if (login[0] == '0' && login.size() == 1)
 		return false;
-	std::cout << "Введите пароль\n";
-	std::cin >> pasw;
+	temp = "Введите пароль\n";
+	_Server->sendTo(temp);
+	temp.clear();
+	std::string tempPass = _Server->recFrom();
+	for(int i = 0; i < tempPass.size(); i++){
+		pasw[i] = tempPass[i];
+	}
 	std::cout << pasw[1];
 	if (pasw[0] == '0')
 		if (!pasw[1])
@@ -108,29 +144,42 @@ bool Chat::authData(std::string& login, char pasw[])
 
 void Chat::showUsers(User* user) const
 {
+	std::string temp;
 	clear_screen();
 	int counter = 0;
 	if (_User.size() > 1) {
+		temp = "Выберите пользователя или введите 0 для возврата\n";
 		for (int i = 0; i < _User.size(); i++) {
 			if (_User[i]->getLog() != user->getLog()) {
 				counter++;
-				std::cout << counter << " " << _User[i]->getName() << "  |  " << _User[i]->getLog() << "\n\n";
+				temp += std::to_string(counter) + " " + _User[i]->getName() + "  |  " + _User[i]->getLog() + "\n";
+				//std::cout << counter << " " << _User[i]->getName() << "  |  " << _User[i]->getLog() << "\n\n";
 			}
 		}
+		_Server->sendTo(temp);
+		temp.clear();
 	}
 	else
-		std::cout << "Вы единственный пользователь :-(\n";
+		temp = "Вы единственный пользователь :-(\n";
+		_Server->sendTo(temp);
 }
 
 void Chat::showChats(User* user)
 {
+	std::string temp;
 	clear_screen();
 	if (!user->isEmptyMes()) {
-		std::cout << "Введите номер диалога или 0 для возврата\n";
-		user->showAllChats();
+		temp.clear();
+		temp = "Введите номер диалога или 0 для возврата\n";
+		temp += user->showAllChats();
+		_Server->sendTo(temp);
+		temp.clear();
 	}
-	else
-		std::cout << "Пока нет диалогов :-(\n";
+	else{
+		temp = "Пока нет диалогов :-(\nНажмите Enter для возврата\n";
+		//НАДО ПЕРЕДЕЛАТЬ!!!
+		_Server->sendTo(temp);
+	}
 }
 
 User* Chat::chatChoice(int number, User* me)
@@ -168,16 +217,20 @@ User* Chat::userChoice(int number, User* me)
 
 void Chat::chatting(User* me, User* other)
 {
+	clear_screen();
 	std::string text;
 	bool chattingStatus = true;
 	while (chattingStatus) {
-		clear_screen();
-		me->showOneChat(other);
-		std::cout << "\nВведите сообщение и нажмите Enter для отправки, для возврата отправьте 0\n";
-		std::getline(std::cin, text, '\n');
+		text.clear();
+		text = me->showOneChat(other);
+		// _Server->sendTo(text);
+		// text.clear();
+		text += "\nВведите сообщение и нажмите Enter для отправки, для возврата отправьте 0\n";
+		_Server->sendTo(text);
+		text.clear();
+		text = _Server->recFrom();
 		if (text[0] == '0' && text.size() == 1) {
 			chattingStatus = false;
-			clear_screen();
 			break;
 		}
 		else if (text.size() > 1) {

@@ -3,6 +3,7 @@
 #include "User.h"
 #include "Sha1.h"
 #include <vector>
+#include "myServer.h"
 
 #define LOGINLENGTH 10
 
@@ -36,7 +37,11 @@ public:
 
 	int chatSize()const;
 
+	void responseToClient(std::string& response);
+	std::string commandFromClient();
+	void acceptClient();
+
 private:
-	
+	myServer* _Server = new myServer;
 	std::vector<User*> _User;
 };

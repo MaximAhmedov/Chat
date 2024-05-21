@@ -15,19 +15,30 @@ int main() {
 	Chat chat;
 	User* me = nullptr;
 	User* other = nullptr;
-	bool chatCon = true;
+	
 
+	while(true){
+	chat.acceptClient();
+	bool chatCon = true;
 	while (chatCon) {
-		clear_screen();
 		std::string name;
 		std::string login;
 		char pass[LOGINLENGTH];
 		std::fill(pass, pass+LOGINLENGTH, '1');
 		int choice;
-		std::cout << "\t1 - Войти\n \t2 - Регистрация\n \t3 - Выход\n";
-		std::cin >> choice;
+		std::string output;
+		std::string input;
+		output = "\t1 - Войти\n \t2 - Регистрация\n \t3 - Выход\n";
+		chat.responseToClient(output);
+		output.clear();
+		input = chat.commandFromClient();
+		choice = std::stoi(input);
+		input.clear();
 
 		if (choice == 3) {
+			output = "end connection";
+			chat.responseToClient(output);
+			output.clear();
 			chatCon = false;
 			break;
 		}
@@ -56,7 +67,9 @@ int main() {
 				break; 
 			}
 			default:
-				std::cout << "Ошибка!\n";
+				output = "Ошибка!\n";
+				chat.responseToClient(output);
+				output.clear();
 				break;
 		}
 
@@ -64,20 +77,26 @@ int main() {
 			bool inChatCon = true;
 			while (inChatCon) {
 				int inChat;
-				std::cout << "\t1 - Все пользователи\n \t2 - Мои Сообщения\n \t3 - Выход из аккаунта\n";
-				std::cin >> inChat;
+				output = "\t1 - Все пользователи\n \t2 - Мои Сообщения\n \t3 - Выход из аккаунта\n";
+				chat.responseToClient(output);
+				output.clear();
+				input = chat.commandFromClient();
+				inChat = std::stoi(input);
+				input.clear();
 
 				switch (inChat) {
 				case 1:
 				{
 					chat.showUsers(me);
 					if (chat.chatSize() > 1) {
-						std::cout << "Выберите пользователя или введите 0 для возврата\n";
-						int friendChoice;
-						std::cin >> friendChoice;
+						// output = "Выберите пользователя или введите 0 для возврата\n";
+						// chat.responseToClient(output);
+						// output.clear();
+						input = chat.commandFromClient();
+						int friendChoice = std::stoi(input);
+						input.clear();
 						other = chat.userChoice(friendChoice, me);
 						if (other) {
-							
 							chat.chatting(me, other);
 						}
 					}
@@ -88,8 +107,9 @@ int main() {
 				{
 					chat.showChats(me);
 					if (!me->isEmptyMes()) {
-						int friendChoice;
-						std::cin >> friendChoice;
+						input = chat.commandFromClient();
+						int friendChoice = std::stoi(input);
+						input.clear();
 						other = chat.chatChoice(friendChoice, me);
 						if (other) {
 							
@@ -105,7 +125,9 @@ int main() {
 					break;
 				}
 				default:
-					std::cout << "Ошибка!\n";
+					output = "Ошибка!\n";
+					chat.responseToClient(output);
+					output.clear();
 					break;
 				}
 			}
@@ -114,6 +136,7 @@ int main() {
 			me = nullptr;
 		if (other)
 			other = nullptr;
+	}
 	}
 	return 0;
 }
