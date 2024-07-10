@@ -64,4 +64,7 @@ bool User::isEmptyMes()
 	return this->_myMes->isEmpty();
 }
 
-
+int User::getCountOfChats() const
+{
+    return _myMes->getCount();
+}

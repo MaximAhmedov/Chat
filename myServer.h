@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string.h>
+#include "Chat.h"
 
 #if defined(_WIN32)
 #include <winsock2.h>
@@ -26,7 +27,7 @@
 #endif
 
 #define PORT 7777
-#define Buff 512
+#define Buff 1024
 
 
 class myServer{
@@ -36,24 +37,42 @@ public:
 myServer();
 ~myServer();
 void startToListen();
+
+void fdStart();
+int selectFunc();
+void mainFunc(int i);
+
 void accepting();
-std::string recFrom();
-void sendTo(std::string& message);
+void getAndCheckRecv();
+char* getMes();
+
+//std::string recFrom();
+//void sendTo(std::string& message);
 void stopServer();
 
 private:
 WIN(WSADATA wsaData;);
 WIN(SOCKET ListenSocket = INVALID_SOCKET;);
 WIN(SOCKET ClientSocket = INVALID_SOCKET;);
+WIN(SOCKET selectClSocket = INVALID_SOCKET;);
+WIN(SOCKET selectSock = INVALID_SOCKET;);
 
 NIX(int ListenSocket;);
 NIX(int ClientSocket;);
+NIX(int selectClSocket;);
+NIX(int selectSock;);
 NIX(int SOCKET_ERROR = -1;);
 NIX(int INVALID_SOCKET = -1;);
 
 struct sockaddr_in serveraddress;
 struct sockaddr_in client;
+fd_set master;
+fd_set copy;
 int iResult;
 int recvBuffLen = Buff;
 char recvBuff[Buff];
+
+Chat chat;
+//std::string message;
+//std::string response;
 };

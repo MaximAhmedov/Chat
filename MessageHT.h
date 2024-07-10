@@ -15,6 +15,8 @@ public:
     bool isEmpty();
     void resize();
 
+    int getCount() const;
+
 private:
     class Message {
     public:
@@ -37,6 +39,6 @@ private:
 
     Message** mess_tops;
     int mem_size;
-    int count;
+    int count = 0;
 };
 

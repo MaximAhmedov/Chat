@@ -50,14 +50,17 @@ void HashTable::send(std::string& text, const std::string& name, const std::stri
 				if (mess_tops[index]->_login == login)
 					break;
 			}
-			else if (mess_tops[index] == nullptr)
+			else if (mess_tops[index] == nullptr){
+				count++;
 				break;
+			}
 		}
 		mess_tops[index] = new Message(text, name, login);
 	}
-	else
+	else{
 		mess_tops[index] = new Message(text, name, login);
-	// count++;
+		count++;
+	}
 	// if (count >= mem_size)
 	// 	resize();
 }
@@ -82,17 +85,21 @@ void HashTable::getBy(std::string& text, const std::string& name, const std::str
 				if (mess_tops[index]->_login == login)
 					break;
 			}
-			else if (mess_tops[index] == nullptr)
+			else if (mess_tops[index] == nullptr){
+				count++;
 				break;
+			}
 		}
+		// if(){} and then resize here
 		mess_tops[index] = new Message(text, name, login);
 		mess_tops[index]->sended = false;
 	}
 	else {
 		mess_tops[index] = new Message(text, name, login);
 		mess_tops[index]->sended = false;
+		count++;
 	}
-	// count++;
+	
 	// if (count >= mem_size)
 	// 	resize();
 }
@@ -184,4 +191,9 @@ void HashTable::resize()
 		mess_tops[i] = save[i];
 	}
 	delete[] save;
+}
+
+int HashTable::getCount() const
+{
+	return this->count;
 }

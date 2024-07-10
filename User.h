@@ -30,6 +30,7 @@ public:
 	std::string showAllChats()const;
 
 	bool isEmptyMes();
+	int getCountOfChats() const;
 
 private:
 	HashTable* _myMes;

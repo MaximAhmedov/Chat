@@ -3,7 +3,7 @@
 #include "User.h"
 #include "Sha1.h"
 #include <vector>
-#include "myServer.h"
+#include <map>
 
 #define LOGINLENGTH 10
 
@@ -20,28 +20,30 @@ class Chat {
 public:
 	Chat();
 	~Chat();
+
+	typedef enum COMMAND { REGIS = 1, SIGNIN, CHATW, ADDMES, ALLUSER, ALLCHATS};	
 	
+	std::string parsedPart(std::string& stringLine);
+	std::string regis(std::string& commandFromUser);
+	std::string auth(std::string& commandFromUser);
+	std::string chatw (std::string& commandFromUser);
+	std::string addmes (std::string& commandFromUser);
+	std::string alluser (std::string& commandFromUser);
+	std::string allchats (std::string& commandFromUser);
 
-	User* regis(std::string& name, std::string& login, char pasw[], int paswLength);
-	User* auth(std::string& login, char pasw[], int paswLength);
-	bool regData(std::string& name, std::string& login, char pasw[], int paswLength);
-	bool authData(std::string& login, char pasw[]);
-
-	void showUsers(User* user)const;
-	void showChats(User* user);
-
+	//void showUsers(User* user)const;
+	//void showChats(User* user);
+	User* findMain(std::string login);
 	User* chatChoice(int number, User* me);
-
 	User* userChoice(int number, User* me);
-	void chatting(User* me, User* other);
-
-	int chatSize()const;
-
-	void responseToClient(std::string& response);
-	std::string commandFromClient();
-	void acceptClient();
+	
+	//std::string& chatting(std::string& commandFromUser);
+	//int chatSize()const;
+	
+	enum COMMAND getCommand(std::string& commandFromUser);
 
 private:
-	myServer* _Server = new myServer;
+	std::map<std::string, COMMAND> comMap;
+	std::string delim = "%";
 	std::vector<User*> _User;
 };
