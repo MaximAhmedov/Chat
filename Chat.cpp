@@ -32,7 +32,6 @@ std::string Chat::parsedPart(std::string& stringLine)
 
 std::string Chat::regis(std::string& commandFromUser)
 {
-	clear_screen();
 	std::string login = parsedPart(commandFromUser);
 	std::string name = parsedPart(commandFromUser);
 	std::string tmppasw = parsedPart(commandFromUser);
@@ -47,31 +46,27 @@ std::string Chat::regis(std::string& commandFromUser)
 	if (_User.empty()) {
 		newUser = new User(name, login, sh1);
 		_User.push_back(newUser);
-		//std::cout << "Успешная регистрация!\n";
 		return succes;
 	}
 	else {
 		for (int i = 0; i < _User.size(); i++) {
 			if (_User[i]->getLog() == login) {
-				//std::cout << "Логин занят, попробуйте другой!\n";
-				std::string notSucces = "Логин занят, попробуйте другой!\n";
+				std::string notSucces = "Login is busy, try another one!\n";
 				return notSucces;
 			}
 			else {
 				newUser = new User(name, login, sh1);
 				_User.push_back(newUser);
-				//std::cout << "Успешная регистрация!\n";
 				return succes;
 			}
 		}
 	}
-	std::string ubAnswer = "что то пошло не так\n";
+	std::string ubAnswer = "Something went wrong\n";
 	return ubAnswer;
 }
 
 std::string Chat::auth(std::string& commandFromUser)
 {
-	clear_screen();
 	std::string login = parsedPart(commandFromUser);
 	std::string tmppasw = parsedPart(commandFromUser);
 	char pasw[LOGINLENGTH];
@@ -84,22 +79,20 @@ std::string Chat::auth(std::string& commandFromUser)
 	for (int i = 0; i < _User.size(); i++) {
 		if (_User[i]->getLog() == login) {
 			if (_User[i]->checkPass(sh1)) {
-				//std::cout << "успешная авторизация!\n";
 				return succes;
 			}
 			else {
-				std::string wrongPasw = "неверный пароль!\n";
+				std::string wrongPasw = "Incorrect password!\n";
 				return wrongPasw;
 			}
 		}
 	}
-	std::string nonExistUser = "Пользователя с данным логином не существует!\n";
+	std::string nonExistUser = "There is no user with this login.!\n";
 	return nonExistUser;
 }
 
 std::string Chat::chatw(std::string& commandFromUser)
 {
-	clear_screen();
 	std::string text;
 	User* tmpMe = nullptr;
 	User* tmpOther = nullptr;
@@ -125,8 +118,6 @@ std::string Chat::chatw(std::string& commandFromUser)
 
 std::string Chat::addmes(std::string& commandFromUser)
 {
-    clear_screen();
-	
 	User* tmpMe = nullptr;
 	User* tmpOther = nullptr;
 	std::string wayOfChoose = parsedPart(commandFromUser);
@@ -158,13 +149,12 @@ std::string Chat::alluser(std::string& commandFromUser)
 			if (_User[i]->getLog() != tmpMe->getLog()) {
 				counter++;
 				temp += std::to_string(counter) + " " + _User[i]->getName() + "  |  " + _User[i]->getLog() + "\n";
-				//std::cout << counter << " " << _User[i]->getName() << "  |  " << _User[i]->getLog() << "\n\n";
 			}
 		}
 		return temp;
 	}
 	else
-		return temp += "Вы единственный пользователь :-(\n";
+		return temp += "You are the only user\n";
 }
 
 std::string Chat::allchats(std::string& commandFromUser)
@@ -180,49 +170,10 @@ std::string Chat::allchats(std::string& commandFromUser)
 		return temp;
 	}
 	else{
-		return temp += "Пока нет диалогов :-(\n";
-		//НАДО ПЕРЕДЕЛАТЬ!!!
+		return temp += "There are no dialogues yet\n";
 	}
-    // TODO: insert return statement here
 }
 
-
-
-// void Chat::showUsers(User* user) const
-// {
-// 	std::string temp;
-// 	clear_screen();
-// 	int counter = 0;
-// 	if (_User.size() > 1) {
-// 		temp = "Выберите пользователя или введите 0 для возврата\n";
-// 		for (int i = 0; i < _User.size(); i++) {
-// 			if (_User[i]->getLog() != user->getLog()) {
-// 				counter++;
-// 				temp += std::to_string(counter) + " " + _User[i]->getName() + "  |  " + _User[i]->getLog() + "\n";
-// 				//std::cout << counter << " " << _User[i]->getName() << "  |  " << _User[i]->getLog() << "\n\n";
-// 			}
-// 		}
-// 		temp.clear();
-// 	}
-// 	else
-// 		temp = "Вы единственный пользователь :-(\n";
-// }
-
-// void Chat::showChats(User* user)
-// {
-// 	std::string temp;
-// 	clear_screen();
-// 	if (!user->isEmptyMes()) {
-// 		temp.clear();
-// 		temp = "Введите номер диалога или 0 для возврата\n";
-// 		temp += user->showAllChats();
-// 		temp.clear();
-// 	}
-// 	else{
-// 		temp = "Пока нет диалогов :-(\nНажмите Enter для возврата\n";
-// 		//НАДО ПЕРЕДЕЛАТЬ!!!
-// 	}
-// }
 
 User *Chat::findMain(std::string login)
 {
@@ -263,47 +214,9 @@ User* Chat::userChoice(int number, User* me)
 			}
 		}
 	}
-	std::cout << "Ошибка!\n";
+	std::cout << "Error!\n";
 	return nullptr;
 }
 
-// std::string& Chat::chatting(std::string& commandFromUser)
-// {
-// 	clear_screen();
-// 	User* tmpMe = nullptr;
-// 	User* tmpOther = nullptr;
-// 	std::string wayOfChoose = parsedPart(commandFromUser);
-// 	std::string tmpLogin = parsedPart(commandFromUser);
-// 	tmpMe = this->findMain(tmpLogin);
-// 	std::string tmpNumb = parsedPart(commandFromUser);
-// 	if(wayOfChoose == "userway"){
-// 		tmpOther = this->userChoice(std::stoi(tmpNumb),tmpMe);
-// 	}
-// 	else{
-// 		tmpOther = this->chatChoice(std::stoi(tmpNumb),tmpMe);
-// 	}
-	
-// 	std::string text;
-// 	bool chattingStatus = true;
-// 	while (chattingStatus) {
-// 		text.clear();
-// 		text = tmpMe->showOneChat(tmpOther);
-// 		// _Server->sendTo(text);
-// 		// text.clear();
-// 		text.clear();
-// 		if (text[0] == '0' && text.size() == 1) {
-// 			chattingStatus = false;
-// 			break;
-// 		}
-// 		else if (text.size() > 1) {
-// 			tmpMe->sendMes(text, tmpMe, tmpOther);
-// 		}
-// 	}
-// }
-
-// int Chat::chatSize() const
-// {
-// 	return _User.size();
-// }
 
 

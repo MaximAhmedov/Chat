@@ -12,20 +12,19 @@
 #define clear_screen() system("clear")
 #endif
 
+#define WIN(exp) exp
+#define NIX(exp)
+
 int main() {
-	
-	//Chat chat;
+	SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
 	myServer server;
-	//User* me = nullptr;
-	//User* other = nullptr;
-	
 	server.fdStart();
 	while(true){
 		int counter = server.selectFunc();
 		for(int i = 0; i < counter; i++){
 			server.mainFunc(i);
 		}
-
 	}
 	return 0;
 }

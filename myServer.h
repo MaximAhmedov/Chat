@@ -46,8 +46,6 @@ void accepting();
 void getAndCheckRecv();
 char* getMes();
 
-//std::string recFrom();
-//void sendTo(std::string& message);
 void stopServer();
 
 private:
@@ -66,13 +64,18 @@ NIX(int INVALID_SOCKET = -1;);
 
 struct sockaddr_in serveraddress;
 struct sockaddr_in client;
+
+
 fd_set master;
 fd_set copy;
 int iResult;
 int recvBuffLen = Buff;
 char recvBuff[Buff];
 
+char hostbuffer[256];
+struct hostent *host_entry;
+int hostname;
+struct in_addr **addr_list;
+
 Chat chat;
-//std::string message;
-//std::string response;
 };

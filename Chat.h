@@ -21,7 +21,7 @@ public:
 	Chat();
 	~Chat();
 
-	typedef enum COMMAND { REGIS = 1, SIGNIN, CHATW, ADDMES, ALLUSER, ALLCHATS};	
+	enum COMMAND { REGIS = 1, SIGNIN, CHATW, ADDMES, ALLUSER, ALLCHATS};	
 	
 	std::string parsedPart(std::string& stringLine);
 	std::string regis(std::string& commandFromUser);
@@ -31,14 +31,10 @@ public:
 	std::string alluser (std::string& commandFromUser);
 	std::string allchats (std::string& commandFromUser);
 
-	//void showUsers(User* user)const;
-	//void showChats(User* user);
 	User* findMain(std::string login);
 	User* chatChoice(int number, User* me);
 	User* userChoice(int number, User* me);
 	
-	//std::string& chatting(std::string& commandFromUser);
-	//int chatSize()const;
 	
 	enum COMMAND getCommand(std::string& commandFromUser);
 

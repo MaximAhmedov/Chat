@@ -43,6 +43,15 @@ void myServer::startToListen(){
     }
     else
         std::cout << "listen is ok" << std::endl;
+    
+    hostname = gethostname(hostbuffer, sizeof(hostbuffer));
+    host_entry = gethostbyname(hostbuffer);
+    addr_list = (struct in_addr **)host_entry->h_addr_list;
+    for (int i = 0; addr_list[i] != NULL; i++) {
+        std::string x = inet_ntoa(*addr_list[i]);
+        if(x != "192.168.56.1")
+            printf("IP address : %s\n",inet_ntoa(*addr_list[i]));
+    }
 }
 void myServer::fdStart() {
     FD_ZERO(&(this->master));
@@ -70,10 +79,9 @@ void myServer::mainFunc(int i) {
             FD_CLR(selectSock,&master);
         }
         else{
-            //message->clear();
             response.clear();
             std::string message = recvBuff;
-            std::cout << "Data received from client: " << message << std::endl;
+            //std::cout << "Data received from client: " << message << std::endl;
             switch(chat.getCommand(message)){
                 case chat.REGIS:{
                     response = chat.regis(message);
@@ -108,12 +116,6 @@ void myServer::mainFunc(int i) {
                 default:
                     break;
             }
-            // bzero(recvBuff, recvBuffLen);
-            // message.clear();
-            // std::cout << "Enter your message to the client: " << std::endl;
-            // std::getline(std::cin, message, '\n');
-            // send(selectSock,message.c_str(),message.length(),0);
-
         }
     }
 };
@@ -123,21 +125,3 @@ void myServer::stopServer(){
     WIN(closesocket(ClientSocket))NIX(close(ClientSocket));
     WIN(WSACleanup());
 };
-// std::string myServer::recFrom(){
-//     bzero(recvBuff, recvBuffLen);
-//     std::string message;
-//     message.clear();
-//     recv(ClientSocket,recvBuff,recvBuffLen,0);
-//     message = recvBuff;
-//     std::cout << "Data received from client: " << message << std::endl;
-//     return message;
-// };
-
-// void myServer::sendTo(std::string& message){
-//     // bzero(recvBuff, recvBuffLen);
-//     // message.clear();
-//     // std::cout << "Enter your message to the client: " << std::endl;
-//     // std::getline(std::cin, message, '\n');
-//     send(ClientSocket,message.c_str(),message.length(),0);
-// };
-

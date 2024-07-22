@@ -61,8 +61,6 @@ void HashTable::send(std::string& text, const std::string& name, const std::stri
 		mess_tops[index] = new Message(text, name, login);
 		count++;
 	}
-	// if (count >= mem_size)
-	// 	resize();
 }
 
 void HashTable::getBy(std::string& text, const std::string& name, const std::string& login){
@@ -90,7 +88,6 @@ void HashTable::getBy(std::string& text, const std::string& name, const std::str
 				break;
 			}
 		}
-		// if(){} and then resize here
 		mess_tops[index] = new Message(text, name, login);
 		mess_tops[index]->sended = false;
 	}
@@ -100,8 +97,6 @@ void HashTable::getBy(std::string& text, const std::string& name, const std::str
 		count++;
 	}
 	
-	// if (count >= mem_size)
-	// 	resize();
 }
 
 std::string HashTable::showMessages(const std::string& name, const std::string& login)
@@ -123,7 +118,7 @@ std::string HashTable::showMessages(const std::string& name, const std::string& 
 	}
 	Message* start = mess_tops[index];
 	if (start == nullptr || start->_login!=login){
-		temp = "Напишите первое сообщение!\n";
+		temp = "Write your first message!\n";
 		return temp;
 		}
 	else {
