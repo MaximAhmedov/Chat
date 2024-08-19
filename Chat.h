@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
-#include "User.h"
-#include "Sha1.h"
+#include "ServDB.h"
 #include <vector>
 #include <map>
 
@@ -31,9 +30,6 @@ public:
 	std::string alluser (std::string& commandFromUser);
 	std::string allchats (std::string& commandFromUser);
 
-	User* findMain(std::string login);
-	User* chatChoice(int number, User* me);
-	User* userChoice(int number, User* me);
 	
 	
 	enum COMMAND getCommand(std::string& commandFromUser);
@@ -41,5 +37,5 @@ public:
 private:
 	std::map<std::string, COMMAND> comMap;
 	std::string delim = "%";
-	std::vector<User*> _User;
+	servDB servDB;
 };

@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Chat.h"
 
+
 #if defined(_WIN32)
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -41,9 +42,10 @@ void startToListen();
 void fdStart();
 int selectFunc();
 void mainFunc(int i);
-
+//useless func?
 void accepting();
 void getAndCheckRecv();
+//useless func?
 char* getMes();
 
 void stopServer();
@@ -78,4 +80,5 @@ int hostname;
 struct in_addr **addr_list;
 
 Chat chat;
+
 };

@@ -9,6 +9,11 @@
                 "*.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-L\\Program Files\\MySQL\\MySQL Server 8.0\\include",
+                "-L\\Program Files\\MySQL\\MySQL Server 8.0\\lib",
+                "-I\\Program Files\\MySQL\\MySQL Server 8.0\\include",
+                "-I\\Program Files\\MySQL\\MySQL Server 8.0\\lib",
+                "-lmysql",
                 "-lWs2_32"
             ],
             "options": {
