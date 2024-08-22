@@ -37,17 +37,11 @@ public:
 
 myServer();
 ~myServer();
-void startToListen();
 
+void startToListen();
 void fdStart();
 int selectFunc();
 void mainFunc(int i);
-//useless func?
-void accepting();
-void getAndCheckRecv();
-//useless func?
-char* getMes();
-
 void stopServer();
 
 private:

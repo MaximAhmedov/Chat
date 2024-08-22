@@ -2,17 +2,6 @@
 
 servDB::servDB()
 {
-    // mysql_init(&mysql);
-	// if (&mysql == nullptr) {
-	// 	std::cout << "Error: can't create MySQL-descriptor" << std::endl;
-	// }
- 
-	// if (!mysql_real_connect(&mysql, "localhost", "sqluser", "password", "testdb", 0, NULL, 0)) {
-	// 	std::cout << "Error: can't connect to database " << mysql_error(&mysql) << std::endl;
-	// }
-	// else {
-	// 	std::cout << "Success!" << std::endl;
-	// }
 	makeConnection(mysql);
 	mysql_query(&mysql, "set names cp1251");
 	std::string create_user_table = "CREATE TABLE IF NOT EXISTS users(id INT AUTO_INCREMENT PRIMARY KEY, login VARCHAR(25), name VARCHAR(25), password VARCHAR(32))";
