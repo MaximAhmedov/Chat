@@ -136,11 +136,11 @@ void servDB::makeConnection(MYSQL& mysql)
 		if (&mysql == nullptr) {
 			std::cout << "Error: can't create MySQL-descriptor" << std::endl;
 		}
-		std::cout << "\nEnter user name\n";
+		std::cout << "\nEnter user name to connect to Data Base\n";
         std::cin >> tmpUser;
-		std::cout << "\nEnter user password\n";
+		std::cout << "\nEnter user password to connect to Data Base\n";
         std::cin >> tmpPasw;
-		std::cout << "\nEnter user database name\n";
+		std::cout << "\nEnter Data Base name to connect to Data Base\n";
         std::cin >> dbName;
 		if (!mysql_real_connect(&mysql, "localhost", tmpUser.c_str(), tmpPasw.c_str(), dbName.c_str(), 0, NULL, 0)) {
 			clear_screen();
